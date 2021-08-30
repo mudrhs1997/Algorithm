@@ -1,4 +1,10 @@
 import java.util.*;
+/*
+    나무 재테크 (구현)
+
+    시간 초과 * 8
+
+*/
 
 public class 백준_16235 {
     public static void main(String[] args) {
@@ -14,10 +20,12 @@ public class 백준_16235 {
         int dy[] = {0, -1, -1, -1, 0, 1, 1, 1};
 
         LinkedList<Integer>[][] tree = new LinkedList[n+1][n+1];
+        LinkedList<Integer>[][] newTree = new LinkedList[n+1][n+1];
 
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= n; j++) {
                 tree[i][j] = new LinkedList<>();
+                newTree[i][j] = new LinkedList<>();
                 fill[i][j] = scanner.nextInt();
                 food[i][j] = 5;
                 dead[i][j] = 0;
@@ -32,7 +40,10 @@ public class 백준_16235 {
             z = scanner.nextInt();
 
             tree[x][y].add(z);
+            Collections.sort(tree[x][y]);
         }
+
+
 
         while(year>0){
 
@@ -40,7 +51,6 @@ public class 백준_16235 {
             for (int j = 1; j <= n; j++) {
                 for (int k = 1; k <= n; k++) {
                     if (tree[j][k].size() != 0) {
-                        Collections.sort(tree[j][k]);
                         int size = tree[j][k].size();
                         for (int i = 0; i < size; i++) {
                             Integer f = tree[j][k].poll();
@@ -62,6 +72,12 @@ public class 백준_16235 {
             }
 
             // 가을
+
+            for (int j = 1; j <= n; j++) {
+                for (int k = 1; k <= n; k++) {
+                    newTree[j][k]=tree[j][k];
+                }
+            }
             for (int j = 1; j <= n; j++) {
                 for (int k = 1; k <= n; k++) {
                     if (tree[j][k].size() != 0) {
@@ -71,12 +87,18 @@ public class 백준_16235 {
                                     int a = j + dx[p];
                                     int b = k + dy[p];
                                     if (a >= 1 && a <= n && b >= 1 && b <= n) {
-                                        tree[a][b].add(1);
+                                        newTree[a][b].addFirst(1);
                                     }
                                 }
                             }
                         }
                     }
+                }
+            }
+
+            for (int j = 1; j <= n; j++) {
+                for (int k = 1; k <= n; k++) {
+                    tree[j][k]=newTree[j][k];
                 }
             }
 
@@ -87,7 +109,9 @@ public class 백준_16235 {
 
         for (int j = 1; j <= n; j++) {
             for (int k = 1; k <= n; k++) {
-                size += tree[j][k].size();
+                if (tree[j][k].size() != 0) {
+                    size += tree[j][k].size();
+                }
             }
         }
 
